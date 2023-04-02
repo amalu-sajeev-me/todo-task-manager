@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: react-github-actions-build
-          path: dist
+          path: dist/index.html
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
