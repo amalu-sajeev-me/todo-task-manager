@@ -9,3 +9,8 @@ export interface ITodoCategory {
   id: string;
   name: string;
 }
+
+export interface IUser {
+  id: string;
+  fullName: string;
+}

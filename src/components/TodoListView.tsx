@@ -23,6 +23,10 @@ export const TodoListView: FC = (props) => {
             setNewCategory('');
         }
     }
+    const onCreate = () => {
+        Todo.db.categories.add({ id: uuid(), name: newCategory });
+            setNewCategory('');
+    }
     useEffect(() => {
         
     }, []);
@@ -32,8 +36,8 @@ export const TodoListView: FC = (props) => {
 
     console.log('lolo', mappedData);
     return data ? (
-        <Box display='flex' flexDirection='column'>
-            <Box display='flex' flexDirection='row' border='2px solid blue'>
+        <Box height={window.innerHeight - 100} display='flex' flexDirection='column'  sx={{overflow: 'scroll', border:'2px solid blue', scrollbarWidth: 2, scrollBehavior: 'smooth'}}>
+            <Box display='flex' flexDirection='row'>
                 <Table>
                     <TableRow>
                 {(categories || []).map(category => {
@@ -50,8 +54,11 @@ export const TodoListView: FC = (props) => {
                         </TableCell>
                     )
                 })}
-                        <TableCell>
-                                <TextField sx={{minWidth: 122}} variant="outlined" placeholder="new category" value={newCategory} onChange={(e)=> setNewCategory(e.currentTarget.value)} onKeyUp={onEnter} />
+                        <TableCell sx={{ display: 'table-cell', verticalAlign: 'top' }}>
+                            <Box display='flex' flexDirection='row'>
+                                <TextField sx={{ minWidth: 122 }} variant="outlined" placeholder="new category" value={newCategory} onChange={(e) => setNewCategory(e.currentTarget.value)} onKeyUp={onEnter} />
+                                <Button variant="contained" onClick={onCreate}>create</Button>
+                            </Box>
                         </TableCell>
                     </TableRow>
                 </Table>

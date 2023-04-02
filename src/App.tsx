@@ -5,6 +5,7 @@ import { Todo } from './services/DatabaseService'
 import { TodoItem } from './services/TodoItem'
 import { NewTodoItem } from './components/NewTodoItem';
 import { TodoListView } from './components/TodoListView';
+import { Authenticator } from './components/Authenticator';
 
 function App() {
   // Todo.db.todoItems.add(TodoItem.create('new item', 'new description'));
@@ -16,10 +17,12 @@ function App() {
       warning: '⚠️',
       info: 'ℹ️',
     }}>
-      <Box>
-        <NewTodoItem />
-        <TodoListView />
-      </Box>
+      <Authenticator>
+        <Box display='block' overflow='hidden' minHeight='80%'>
+          <NewTodoItem />
+          <TodoListView />
+        </Box>
+      </Authenticator>
     </SnackbarProvider>
   );
 }
