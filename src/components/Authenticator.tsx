@@ -14,12 +14,13 @@ export const Authenticator: React.FC<PropsWithChildren> = ({ children }) => {
         (async () => { 
             try {
                 const currentUser = await localforage.getItem('current user') as string;
-                const userInfo = await Todo.db.users.where('fullName').equals(currentUser).first() || null;
+                const userInfo = (await Todo.db.users.where({fullName: currentUser}).first()) || null
+                console.log('lolol', {currentUser, userInfo})
                 setUser(userInfo);
                 if (!currentUser) navigate('/login');
             } catch (err) { 
-                enqueueSnackbar(err instanceof Error? err.message: err as string, {variant: 'error'})
-                throw err;
+                enqueueSnackbar(err instanceof Error ? err.message : err as string, { variant: 'error' });
+                navigate('/login');
             }
         })();
     }, [])
