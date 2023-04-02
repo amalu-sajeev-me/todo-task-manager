@@ -82,19 +82,19 @@ export const AppbarMenu = ()=> {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
+          <Avatar /> {user.fullName}
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={()=>navigate(`/profile/${user.id}`)}>
           <Avatar /> My account
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={()=>navigate('/login')}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={()=>navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

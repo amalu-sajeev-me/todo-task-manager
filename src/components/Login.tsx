@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Button, Divider, List, ListItem, ListItemButton, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, Divider, IconButton, List, ListItem, ListItemButton, TextField, Typography } from "@mui/material"
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Todo } from '../services/DatabaseService';
 import { uuid } from '../utils/uuid';
 import localforage from 'localforage';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRightAltOutlined, ArrowRightOutlined, Person4Outlined, VerifiedUserRounded } from '@mui/icons-material';
 
 export const Login = () => {
     const [newUser, setNewUser] = useState('');
@@ -12,10 +13,11 @@ export const Login = () => {
     const users = useLiveQuery(() => {
         return Todo.db.users.toArray();
     });
-    const onClick = async () => {
-        await Todo.db.users.add({ id: uuid(), fullName: newUser });
-        await localforage.setItem('current user', newUser);
-        navigate('/');
+    const onClick = () => {
+        Todo.db.users.add({ id: uuid(), fullName: newUser }).finally(async () => {
+            await localforage.setItem('current user', newUser);
+            navigate('/');
+        });
     }
     return (
         <Box display='flex' flexDirection='column' minWidth='100%' border='2px solid green' justifyContent='center' alignItems='center' sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -32,8 +34,13 @@ export const Login = () => {
             <List>
                 {(users || []).map(user => {
                     return (
-                        <ListItem disablePadding sx={{minWidth: 300}} key={user.id}>
-                            <ListItemButton >{user.fullName}</ListItemButton>
+                        <ListItem disablePadding sx={{ minWidth: 300 }} key={user.id} onClick={()=>{setNewUser(user.fullName)}}>
+                            {/* <Avatar><VerifiedUserRounded/></Avatar> */}
+                            <ListItemButton >
+                                <Person4Outlined />
+                                {user.fullName}
+                            </ListItemButton>
+                            <IconButton><ArrowRightOutlined/></IconButton>
                             <Divider variant='inset' light />
                         </ListItem>
                     )

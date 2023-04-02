@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import { TextField, Box, Button } from '@mui/material';
+import { TextField, Box, Button, ButtonGroup } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { Todo } from '../services/DatabaseService';
 import { TodoItem } from '../services/TodoItem';
 import { NewItemDialog } from './NewItemDialog';
+import { Breadcrumbs } from './BreadCrumbs';
 
 export const NewTodoItem: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -27,10 +28,13 @@ export const NewTodoItem: React.FC = () => {
         }
     }
     return (
-        <Box display="flex" flexDirection="row">
-            <TextField sx={{backgroundColor:'InfoBackground'}} placeholder='New Item' value={title} onChange={e=>setTitle(e.currentTarget.value)} />
+        <Box display="flex" flexDirection="row" alignItems='center' gap={4}>
+            <ButtonGroup>
+                <TextField sx={{backgroundColor:'InfoBackground'}} placeholder='New Item' value={title} onChange={e=>setTitle(e.currentTarget.value)} />
+                <Button variant='contained' onClick={onAdd}>Add</Button>
+            </ButtonGroup>
             {/* <TextField multiline placeholder='Description' value={description} onChange={e=>setDescription(e.currentTarget.value)}/> */}
-            <Button variant='contained' onClick={onAdd}>Add</Button>
+            <Breadcrumbs />
             <NewItemDialog onChange={(val: React.SetStateAction<string>)=> {setDescription(val)}} onCancel={onCancel} open={dialogOpen} itemName={title} onSave={handleClick} />
         </Box>
     );
