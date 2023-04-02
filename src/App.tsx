@@ -6,6 +6,8 @@ import { TodoItem } from './services/TodoItem'
 import { NewTodoItem } from './components/NewTodoItem';
 import { TodoListView } from './components/TodoListView';
 import { Authenticator } from './components/Authenticator';
+import { AppbarMenu } from './components/AppbarMenu';
+import { FailSafe } from './utils/FailSafe';
 
 function App() {
   // Todo.db.todoItems.add(TodoItem.create('new item', 'new description'));
@@ -17,12 +19,15 @@ function App() {
       warning: '⚠️',
       info: 'ℹ️',
     }}>
-      <Authenticator>
-        <Box display='block' overflow='hidden' minHeight='80%'>
-          <NewTodoItem />
-          <TodoListView />
-        </Box>
-      </Authenticator>
+      <FailSafe>
+        <Authenticator>
+          <Box display='block' overflow='hidden' minHeight='80%'>
+            <NewTodoItem />
+            <TodoListView />
+          </Box>
+          <AppbarMenu />
+        </Authenticator>
+      </FailSafe>
     </SnackbarProvider>
   );
 }
