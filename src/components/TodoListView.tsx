@@ -1,11 +1,13 @@
 import React, {FC, useEffect, useState, useReducer} from "react";
-import { Box, Button, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Box, Button, ButtonGroup, Card, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import { ReactSortable } from "react-sortablejs";
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Todo } from '../services/DatabaseService';
 import { ITodoItem } from "../services/types";
 import { uuid } from '../utils/uuid';
 import { ItemCardView } from "./ItemCardView";
+import { DeleteOutline } from "@mui/icons-material";
+import { enqueueSnackbar } from "notistack";
 
 
 export const TodoListView: FC = (props) => {
@@ -25,16 +27,14 @@ export const TodoListView: FC = (props) => {
     }
     const onCreate = () => {
         Todo.db.categories.add({ id: uuid(), name: newCategory });
-            setNewCategory('');
-    }
-    useEffect(() => {
-        
-    }, []);
-    const mappedData = (data || []).map((item, index) => {
-        return 
-    })
-
-    console.log('lolo', mappedData);
+        setNewCategory('');
+    };
+    const onDelete = (id: string)=> async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        await Todo.db.categories.delete(id);
+        enqueueSnackbar('successfully removed category', {variant:'success'})
+    };
+    
     return data ? (
         <Box height={window.innerHeight - 100} display='flex' flexDirection='column'  sx={{overflow: 'scroll', border:'2px solid blue', scrollbarWidth: 2, scrollBehavior: 'smooth'}}>
             <Box display='flex' flexDirection='row'>
@@ -43,7 +43,13 @@ export const TodoListView: FC = (props) => {
                 {(categories || []).map(category => {
                     return (
                         <TableCell align="center" valign="top" key={category.id} sx={{display: 'table-cell', verticalAlign: 'top'}}>
-                            <Button fullWidth variant="outlined">{category.name}</Button>
+                            
+                            <ButtonGroup variant="contained" sx={{'&:hover .delete': {color: 'red'}}}>
+                                <Button fullWidth variant="outlined">
+                                    {category.name}
+                                </Button>
+                                <IconButton onClick={onDelete(category.id)} className="delete" sx={{borderRadius: 0}}><DeleteOutline /></IconButton>
+                            </ButtonGroup>
                         <Box display='flex' flexDirection='column'>
                             {data.filter(item => item.category.name === category.name).map(i => {
                                 return (
