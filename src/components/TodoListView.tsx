@@ -53,7 +53,7 @@ export const TodoListView: FC = (props) => {
                         <Box display='flex' flexDirection='column'>
                             {data.filter(item => item.category.name === category.name).map(i => {
                                 return (
-                                    <ItemCardView categoryName={category.name} id="0" title={i.title} key={i.id} />
+                                    <ItemCardView description={i.description} categoryName={category.name} id="0" title={i.title} key={i.id} />
                                 );
                         })}
                             </Box>

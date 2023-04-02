@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, Divider, Menu, MenuItem, Select } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, Divider, Menu, MenuItem, Select, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Todo } from '../services/DatabaseService';
 import { uuid } from '../utils/uuid';
 import { ITodoItem, ITodoCategory } from '../services/types';
+import { DescriptionRounded, KeyboardArrowDownTwoTone, SwipeRightAltTwoTone } from '@mui/icons-material';
+import { truncate } from '../utils/utils';
 
-export const ItemCardView = (props: { id: string, title: string, categoryName: string }) => {
-    const { id, title, categoryName } = props;
+export const ItemCardView = (props: { id: string, title: string, description: string, categoryName: string }) => {
+    const { id, title, categoryName, description } = props;
     const categories = useLiveQuery(() => {
         return Todo.db.categories.toArray();
     });
@@ -27,12 +29,26 @@ export const ItemCardView = (props: { id: string, title: string, categoryName: s
     }
     return (
         <Box>
-            <Card sx={{ maxWidth: 275, minWidth: 160, minHeight: 75, m: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }} key={id}>
+            <Card sx={{ maxWidth: 275, minWidth: 160, minHeight: 75, m: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, overflow:'visible' }} key={id}>
                 <CardContent>{title}</CardContent>
-                <Divider variant='middle' flexItem sx={{position: 'absolute', left:0, zIndex: 2, rotate: '-90deg', translate: '-50%', color:'purple', borderBottom: '2px double blueviolet', textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: '2px'}} >{categoryName}</Divider>
+                <Divider variant='middle' flexItem sx={{position: 'absolute', left:0, zIndex: 2, rotate: '-90deg', translate: '-100%', color:'purple', borderBottom: '2px double blueviolet', textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: '2px', backgroundColor: 'InfoBackground'}} >{categoryName}</Divider>
+                
+                <Box>
+                    <Box>
+                        <Typography variant='caption' color='GrayText' display='flex' alignItems='center' gap={1}>
+                            <DescriptionRounded fontSize='small'/>
+                            Description
+                        </Typography>
+                    </Box>
+                    <Box sx={{overflow: 'hidden', mt: 1}} display='flex' alignItems='center' justifyContent='center' minWidth='calc(100% - 2rem)' textOverflow='ellipsis' maxHeight='100px'>
+                        <Typography variant='body2' fontSize='small' color='InactiveCaptionText' sx={{textTransform:'capitalize'}}>
+                            {description.length > 0 ? truncate(description) : 'none'}
+                        </Typography>
+                    </Box>
+                </Box>
                 <Box>
                         <Button  onClick={handleClick}>
-                            category
+                            move to <KeyboardArrowDownTwoTone />
                         </Button>
                     <Menu open={open} sx={{ border: 'none' }} anchorEl={anchorEl} onClose={handleClose}>
                             {(categories || []).map((category) => {
