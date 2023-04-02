@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, Menu, MenuItem, Select } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, Divider, Menu, MenuItem, Select } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Todo } from '../services/DatabaseService';
 import { uuid } from '../utils/uuid';
@@ -29,6 +29,7 @@ export const ItemCardView = (props: { id: string, title: string, categoryName: s
         <Box>
             <Card sx={{ maxWidth: 275, minWidth: 160, minHeight: 75, m: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }} key={id}>
                 <CardContent>{title}</CardContent>
+                <Divider variant='middle' flexItem sx={{position: 'absolute', left:0, zIndex: 2, rotate: '-90deg', translate: '-50%', color:'purple', borderBottom: '2px double blueviolet', textTransform: 'uppercase', fontFamily: 'monospace', letterSpacing: '2px'}} >{categoryName}</Divider>
                 <Box>
                         <Button  onClick={handleClick}>
                             category

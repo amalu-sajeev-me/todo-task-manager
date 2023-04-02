@@ -44,11 +44,11 @@ export const TodoListView: FC = (props) => {
                     return (
                         <TableCell align="center" valign="top" key={category.id} sx={{display: 'table-cell', verticalAlign: 'top'}}>
                             
-                            <ButtonGroup variant="contained" sx={{'&:hover .delete': {color: 'red'}}}>
-                                <Button fullWidth variant="outlined">
+                            <ButtonGroup color="secondary" variant="contained" sx={{'&:hover .delete': {color: 'red'}}}>
+                                <Button fullWidth variant="contained" color="info">
                                     {category.name}
                                 </Button>
-                                <IconButton onClick={onDelete(category.id)} className="delete" sx={{borderRadius: 0}}><DeleteOutline /></IconButton>
+                                <IconButton color="warning" onClick={onDelete(category.id)} className="delete" sx={{borderRadius: 0}}><DeleteOutline /></IconButton>
                             </ButtonGroup>
                         <Box display='flex' flexDirection='column'>
                             {data.filter(item => item.category.name === category.name).map(i => {
