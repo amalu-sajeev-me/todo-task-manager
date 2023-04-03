@@ -1,39 +1,42 @@
 import React, {useState} from 'react';
 import { TextField, Box, Button, ButtonGroup } from '@mui/material';
+import { useForm, SubmitHandler } from "react-hook-form";
+import {zodResolver} from '@hookform/resolvers/zod'
+import Z from 'zod';
 import { useSnackbar } from 'notistack';
-import { Todo } from '../services/DatabaseService';
 import { TodoItem } from '../services/TodoItem';
 import { NewItemDialog } from './NewItemDialog';
 import { Breadcrumbs } from './BreadCrumbs';
+import { useTodo } from '../services/db/hooks/useTodo';
 
 export const NewTodoItem: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
+    const todoDB = useTodo();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
+    const { register, handleSubmit, formState, watch } = useForm({
+        mode: 'onChange', resolver: zodResolver(Z.string())});
     const onAdd = () => {
         setDialogOpen(true);
+        handleSubmit((data) => {
+            console.log('lolo', { data });
+        });
+        console.log(watch())
     };
     const onCancel = () => { 
         setDialogOpen(false);
     };
     const handleClick = async () => {
-        try {
-            await Todo.db.todoItems.add(TodoItem.create(title, description));
-            setTitle(''), setDescription('');
-            enqueueSnackbar(`new Item ${title} has been added`, {variant: 'success'});
-        } catch (error) {
-            const message = error instanceof Error ? error.message : error as string;
-            enqueueSnackbar(`Failed to add item, cause: ${message}`, {variant: 'error'});
-        }
+        await todoDB.add(TodoItem.create(title, description), {message:`new Item ${title} has been added`})
+        setTitle(''), setDescription('');
     }
     return (
         <Box display="flex" flexDirection="row" alignItems='center' gap={4}>
             <ButtonGroup>
-                <TextField sx={{backgroundColor:'InfoBackground'}} placeholder='New Item' value={title} onChange={e=>setTitle(e.currentTarget.value)} />
+                <TextField {...register('itemName', {required: true})} sx={{backgroundColor:'InfoBackground'}} placeholder='New Item' value={title} onChange={e=>setTitle(e.currentTarget.value)} />
                 <Button variant='contained' onClick={onAdd}>Add</Button>
             </ButtonGroup>
-            {/* <TextField multiline placeholder='Description' value={description} onChange={e=>setDescription(e.currentTarget.value)}/> */}
             <Breadcrumbs />
             <NewItemDialog onChange={(val: React.SetStateAction<string>)=> {setDescription(val)}} onCancel={onCancel} open={dialogOpen} itemName={title} onSave={handleClick} />
         </Box>
