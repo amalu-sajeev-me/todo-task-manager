@@ -14,4 +14,7 @@ export abstract class BaseModel implements BaseSchemaType {
   public get plainObject() {
     return omitFunctionsInObj(this) as typeof this;
   }
+  public populate(fields: string[]) {
+    //
+  }
 }

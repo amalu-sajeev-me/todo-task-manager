@@ -25,7 +25,7 @@ export const ItemCardView = (props: { id: string, title: string, description: st
         setAnchorEl(null);
         const item = await todoStore.todoItems.where({ title }).first();
         const newCategory: ITodoCategory = {id: uuid(), name: category}
-        if(item) todoStore.todoItems.put({...item, category: newCategory.name});
+        // if(item) todoStore.todoItems.put({...item, category: newCategory.name});
     }
     return (
         <Box>

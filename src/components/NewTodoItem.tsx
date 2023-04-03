@@ -8,6 +8,8 @@ import { NewItemDialog } from './NewItemDialog';
 import { Breadcrumbs } from './BreadCrumbs';
 import { useTodo } from '../services/db/hooks/useTodo.hook';
 import { Todo } from '../models/Todo.model';
+import { categoryStore } from '../services/db/hooks/useCategory.hook';
+import { ObjectId } from '../models/ObjectID.model';
 
 export const NewTodoItem: React.FC = () => {
     const {add: addTodoItem} = useTodo();
@@ -27,9 +29,12 @@ export const NewTodoItem: React.FC = () => {
         setDialogOpen(false);
     };
     const handleClick = async () => {
-        const todo = new Todo(title, description, 'todo');
-        await todo.save();
-        setTitle(''), setDescription('');
+        const category = await categoryStore.categories.orderBy('id').first();
+        if (category) {
+            const todo = new Todo(title, description, new ObjectId(category.id, 'categories'));
+            await todo.save();
+            setTitle(''), setDescription('');
+        }
     }
     return (
         <Box display="flex" flexDirection="row" alignItems='center' gap={4}>

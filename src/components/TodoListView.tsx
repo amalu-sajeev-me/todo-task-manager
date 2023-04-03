@@ -8,12 +8,14 @@ import { enqueueSnackbar } from "notistack";
 import { todoStore } from "../services/db/hooks/useTodo.hook";
 import { categoryStore } from "../services/db/hooks/useCategory.hook";
 import { Category } from "../models/Category.model";
+import { Todo } from "../models/Todo.model";
 
 
 export const TodoListView: FC = (props) => {
     const data = useLiveQuery(() => {
-        return todoStore.todoItems.orderBy('id').sortBy('id')
-    });
+        return Todo.fetchAll();
+    }) || [];
+    console.log({data});
     const [newCategory, setNewCategory] = useState('');
     const categories = useLiveQuery(() => {
         return categoryStore.categories.toArray();
@@ -52,7 +54,7 @@ export const TodoListView: FC = (props) => {
                                 <IconButton color="warning" onClick={onDelete(category.id)} className="delete" sx={{borderRadius: 0}}><DeleteOutline /></IconButton>
                             </ButtonGroup>
                         <Box display='flex' flexDirection='column'>
-                            {data.filter(item => item.category === category.categoryName).map(i => {
+                            {data.filter(item => item.category.categoryName === category.categoryName).map(i => {
                                 return (
                                     <ItemCardView description={i.description || ''} categoryName={category.categoryName} id="0" title={i.title} key={i.id} />
                                 );
