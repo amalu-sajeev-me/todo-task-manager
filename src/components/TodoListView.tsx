@@ -7,6 +7,7 @@ import { DeleteOutline } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { todoStore } from "../services/db/hooks/useTodo.hook";
 import { categoryStore } from "../services/db/hooks/useCategory.hook";
+import { Category } from "../models/Category.model";
 
 
 export const TodoListView: FC = (props) => {
@@ -16,18 +17,19 @@ export const TodoListView: FC = (props) => {
     const [newCategory, setNewCategory] = useState('');
     const categories = useLiveQuery(() => {
         return categoryStore.categories.toArray();
-     });
+    });
+    
+    const onCreate = async () => {
+        const category = new Category(newCategory, 0);
+        await category.save();
+        setNewCategory('');
+    };
     const onEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const { code } = event;
         if (code === 'Enter') {
-            categoryStore.categories.add({ id: uuid(), name: newCategory });
-            setNewCategory('');
+            onCreate();
         }
     }
-    const onCreate = () => {
-        categoryStore.categories.add({ id: uuid(), name: newCategory });
-        setNewCategory('');
-    };
     const onDelete = (id: string)=> async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         await categoryStore.categories.delete(id);
@@ -45,14 +47,14 @@ export const TodoListView: FC = (props) => {
                             
                             <ButtonGroup color="secondary" variant="contained" sx={{'&:hover .delete': {color: 'red'}}}>
                                 <Button fullWidth variant="contained" color="info">
-                                    {category.name}
+                                    {category.categoryName}
                                 </Button>
                                 <IconButton color="warning" onClick={onDelete(category.id)} className="delete" sx={{borderRadius: 0}}><DeleteOutline /></IconButton>
                             </ButtonGroup>
                         <Box display='flex' flexDirection='column'>
-                            {data.filter(item => item.category.name === category.name).map(i => {
+                            {data.filter(item => item.category === category.categoryName).map(i => {
                                 return (
-                                    <ItemCardView description={i.description} categoryName={category.name} id="0" title={i.title} key={i.id} />
+                                    <ItemCardView description={i.description || ''} categoryName={category.categoryName} id="0" title={i.title} key={i.id} />
                                 );
                         })}
                             </Box>

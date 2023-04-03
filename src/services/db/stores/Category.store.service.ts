@@ -1,9 +1,9 @@
 import { Table } from "dexie";
 import { ClientDatabase } from "../ClientDatabase.service";
-import { ITodoCategory } from "../types";
+import { ICategory } from "../../../schemas/category.schema";
 
-export class CategoryStore extends ClientDatabase<ITodoCategory> {
-  categories!: Table<ITodoCategory>;
+export class CategoryStore extends ClientDatabase<ICategory> {
+  categories!: Table<ICategory>;
   constructor() {
     super();
     this.categories = this.table("categories");

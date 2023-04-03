@@ -25,7 +25,7 @@ export const ItemCardView = (props: { id: string, title: string, description: st
         setAnchorEl(null);
         const item = await todoStore.todoItems.where({ title }).first();
         const newCategory: ITodoCategory = {id: uuid(), name: category}
-        if(item) todoStore.todoItems.put({...item, category: newCategory});
+        if(item) todoStore.todoItems.put({...item, category: newCategory.name});
     }
     return (
         <Box>
@@ -52,7 +52,7 @@ export const ItemCardView = (props: { id: string, title: string, description: st
                         </Button>
                     <Menu open={open} sx={{ border: 'none' }} anchorEl={anchorEl} onClose={handleClose}>
                             {(categories || []).map((category) => {
-                                return <MenuItem value={category.name} key={category.id} onClick={onSelect(title, category.name)}>{category.name}</MenuItem>
+                                return <MenuItem value={category.categoryName} key={category.id} onClick={onSelect(title, category.categoryName)}>{category.categoryName}</MenuItem>
                             })}
                         </Menu>
                 </Box>

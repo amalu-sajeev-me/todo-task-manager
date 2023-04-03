@@ -1,7 +1,6 @@
 import { plainToClass } from "class-transformer";
 import { IUser } from "../schemas/user.schema";
 import { userStore } from "../services/db/hooks/useUsers.hook";
-import { omitFunctionsInObj } from "../utils/utils";
 import { BaseModel } from "./Base.model";
 export class User extends BaseModel implements IUser {
   constructor(
@@ -28,7 +27,7 @@ export class User extends BaseModel implements IUser {
     return `${this.firstName} ${this.lastName || ""}`;
   }
   public save = async () => {
-    const data = omitFunctionsInObj({ ...this }) as IUser;
-    await userStore.upsert({ ...data });
+    const user = this.plainObject;
+    await userStore.upsert({ ...user });
   };
 }

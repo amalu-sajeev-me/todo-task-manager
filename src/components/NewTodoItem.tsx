@@ -7,6 +7,7 @@ import { TodoItem } from '../services/TodoItem';
 import { NewItemDialog } from './NewItemDialog';
 import { Breadcrumbs } from './BreadCrumbs';
 import { useTodo } from '../services/db/hooks/useTodo.hook';
+import { Todo } from '../models/Todo.model';
 
 export const NewTodoItem: React.FC = () => {
     const {add: addTodoItem} = useTodo();
@@ -26,7 +27,8 @@ export const NewTodoItem: React.FC = () => {
         setDialogOpen(false);
     };
     const handleClick = async () => {
-        await addTodoItem(TodoItem.create(title, description), {message:`new Item ${title} has been added`})
+        const todo = new Todo(title, description, 'todo');
+        await todo.save();
         setTitle(''), setDescription('');
     }
     return (

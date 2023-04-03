@@ -17,7 +17,7 @@ export const Login = () => {
         const [firstName, lastName] = newUser.split(' ');
         const user = new User(firstName, lastName, 18, 'male');
         await user.save();
-        await localforage.setItem('current user', user.fullName);
+        await localforage.setItem('current user', user.id);
         navigate('/');
     }
     return (
