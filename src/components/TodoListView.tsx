@@ -1,37 +1,36 @@
-import React, {FC, useEffect, useState, useReducer} from "react";
-import { Box, Button, ButtonGroup, Card, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
-import { ReactSortable } from "react-sortablejs";
+import React, {FC, useState} from "react";
+import { Box, Button, ButtonGroup, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Todo } from '../services/DatabaseService';
-import { ITodoItem } from "../services/types";
 import { uuid } from '../utils/uuid';
 import { ItemCardView } from "./ItemCardView";
 import { DeleteOutline } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
+import { todoStore } from "../services/db/hooks/useTodo.hook";
+import { categoryStore } from "../services/db/hooks/useCategory.hook";
 
 
 export const TodoListView: FC = (props) => {
     const data = useLiveQuery(() => {
-        return Todo.db.todoItems.orderBy('id').sortBy('id')
+        return todoStore.todoItems.orderBy('id').sortBy('id')
     });
     const [newCategory, setNewCategory] = useState('');
     const categories = useLiveQuery(() => {
-        return Todo.db.categories.toArray();
+        return categoryStore.categories.toArray();
      });
     const onEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const { code } = event;
         if (code === 'Enter') {
-            Todo.db.categories.add({ id: uuid(), name: newCategory });
+            categoryStore.categories.add({ id: uuid(), name: newCategory });
             setNewCategory('');
         }
     }
     const onCreate = () => {
-        Todo.db.categories.add({ id: uuid(), name: newCategory });
+        categoryStore.categories.add({ id: uuid(), name: newCategory });
         setNewCategory('');
     };
     const onDelete = (id: string)=> async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
-        await Todo.db.categories.delete(id);
+        await categoryStore.categories.delete(id);
         enqueueSnackbar('successfully removed category', {variant:'success'})
     };
     

@@ -3,15 +3,13 @@ import { TextField, Box, Button, ButtonGroup } from '@mui/material';
 import { useForm, SubmitHandler } from "react-hook-form";
 import {zodResolver} from '@hookform/resolvers/zod'
 import Z from 'zod';
-import { useSnackbar } from 'notistack';
 import { TodoItem } from '../services/TodoItem';
 import { NewItemDialog } from './NewItemDialog';
 import { Breadcrumbs } from './BreadCrumbs';
-import { useTodo } from '../services/db/hooks/useTodo';
+import { useTodo } from '../services/db/hooks/useTodo.hook';
 
 export const NewTodoItem: React.FC = () => {
-    const { enqueueSnackbar } = useSnackbar();
-    const todoDB = useTodo();
+    const {add: addTodoItem} = useTodo();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,7 +26,7 @@ export const NewTodoItem: React.FC = () => {
         setDialogOpen(false);
     };
     const handleClick = async () => {
-        await todoDB.add(TodoItem.create(title, description), {message:`new Item ${title} has been added`})
+        await addTodoItem(TodoItem.create(title, description), {message:`new Item ${title} has been added`})
         setTitle(''), setDescription('');
     }
     return (

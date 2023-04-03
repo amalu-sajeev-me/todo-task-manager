@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
-import { Avatar, Box, Button, Divider, IconButton, List, ListItem, ListItemButton, TextField, Typography } from "@mui/material"
+import { Box, Button, Divider, IconButton, List, ListItem, ListItemButton, TextField, Typography } from "@mui/material"
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Todo } from '../services/DatabaseService';
-import { uuid } from '../utils/uuid';
 import localforage from 'localforage';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRightAltOutlined, ArrowRightOutlined, Person4Outlined, VerifiedUserRounded } from '@mui/icons-material';
+import { ArrowRightOutlined, Person4Outlined, VerifiedUserRounded } from '@mui/icons-material';
+import { User } from '../models/User';
+import { userStore } from '../services/db/hooks/useUsers.hook';
 
 export const Login = () => {
     const [newUser, setNewUser] = useState('');
     const navigate = useNavigate();
     const users = useLiveQuery(() => {
-        return Todo.db.users.toArray();
+        return userStore.users.toArray();
     });
-    const onClick = () => {
-        Todo.db.users.add({ id: uuid(), fullName: newUser }).finally(async () => {
-            await localforage.setItem('current user', newUser);
-            navigate('/');
-        });
+    const onClick = async () => {
+        // Todo.db.users.add({ id: uuid(), fullName: newUser }).finally(async () => {
+        //     await localforage.setItem('current user', newUser);
+        //     navigate('/');
+        // });
+        const [firstName, lastName] = newUser.split(' ');
+        const user = new User(firstName, lastName, 18, 'male');
+        await user.save();
+        await localforage.setItem('current user', user.fullName);
+        navigate('/');
     }
     return (
         <Box display='flex' flexDirection='column' minWidth='100%' border='2px solid green' justifyContent='center' alignItems='center' sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -34,11 +39,11 @@ export const Login = () => {
             <List>
                 {(users || []).map(user => {
                     return (
-                        <ListItem disablePadding sx={{ minWidth: 300 }} key={user.id} onClick={()=>{setNewUser(user.fullName)}}>
+                        <ListItem disablePadding sx={{ minWidth: 300 }} key={user.id} onClick={()=>{setNewUser(user.firstName)}}>
                             {/* <Avatar><VerifiedUserRounded/></Avatar> */}
                             <ListItemButton >
                                 <Person4Outlined />
-                                {user.fullName}
+                                {user.firstName}
                             </ListItemButton>
                             <IconButton><ArrowRightOutlined/></IconButton>
                             <Divider variant='inset' light />

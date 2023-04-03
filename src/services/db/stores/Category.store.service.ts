@@ -6,6 +6,7 @@ export class CategoryStore extends ClientDatabase<ITodoCategory> {
   categories!: Table<ITodoCategory>;
   constructor() {
     super();
+    this.categories = this.table("categories");
     this.connectTable(this.categories);
   }
 }

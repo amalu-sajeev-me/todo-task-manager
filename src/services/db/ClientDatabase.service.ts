@@ -50,6 +50,12 @@ export abstract class ClientDatabase<
       .catch(this.handleError);
     return this;
   };
+  public get(key: TKey) {
+    return this.tableName.get(key);
+  }
+  public upsert(item: TModel) {
+    this.tableName.put(item).then(console.log).catch(console.log);
+  }
   public handleError(error: unknown): void {
     console.error("error", error);
     this.enqueueSnackbar(

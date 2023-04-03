@@ -42,7 +42,7 @@ export const AppbarMenu = ()=> {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>{user.fullName[0]}</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user.firstName[0]}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -82,7 +82,7 @@ export const AppbarMenu = ()=> {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> {user.fullName}
+          <Avatar /> {user.firstName}
         </MenuItem>
         <MenuItem onClick={()=>navigate(`/profile/${user.id}`)}>
           <Avatar /> My account

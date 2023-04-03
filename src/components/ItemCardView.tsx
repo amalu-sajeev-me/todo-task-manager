@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, Divider, Menu, MenuItem, Select, Typography } from '@mui/material';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Todo } from '../services/DatabaseService';
 import { uuid } from '../utils/uuid';
 import { ITodoItem, ITodoCategory } from '../services/types';
 import { DescriptionRounded, KeyboardArrowDownTwoTone, SwipeRightAltTwoTone } from '@mui/icons-material';
 import { truncate } from '../utils/utils';
+import { categoryStore } from '../services/db/hooks/useCategory.hook';
+import { todoStore } from '../services/db/hooks/useTodo.hook';
 
 export const ItemCardView = (props: { id: string, title: string, description: string, categoryName: string }) => {
     const { id, title, categoryName, description } = props;
     const categories = useLiveQuery(() => {
-        return Todo.db.categories.toArray();
+        return categoryStore.categories.toArray();
     });
-    // const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -23,9 +23,9 @@ export const ItemCardView = (props: { id: string, title: string, description: st
   };
     const onSelect = (title: string, category: string) => async () => {
         setAnchorEl(null);
-        const item = await Todo.db.todoItems.where({ title }).first();
+        const item = await todoStore.todoItems.where({ title }).first();
         const newCategory: ITodoCategory = {id: uuid(), name: category}
-        if(item) Todo.db.todoItems.put({...item, category: newCategory});
+        if(item) todoStore.todoItems.put({...item, category: newCategory});
     }
     return (
         <Box>
