@@ -1,8 +1,6 @@
 import React from 'react'
 import { SnackbarProvider } from 'notistack';
-import { Box } from '@mui/material'
-import { Todo } from './services/DatabaseService'
-import { TodoItem } from './services/TodoItem'
+import { Box } from '@mui/material';
 import { NewTodoItem } from './components/NewTodoItem';
 import { TodoListView } from './components/TodoListView';
 import { Authenticator } from './components/Authenticator';
