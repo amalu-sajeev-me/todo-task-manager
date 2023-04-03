@@ -8,8 +8,6 @@ import { AppbarMenu } from './components/AppbarMenu';
 import { FailSafe } from './utils/FailSafe';
 
 function App() {
-  // Todo.db.todoItems.add(TodoItem.create('new item', 'new description'));
-
   return (
     <SnackbarProvider maxSnack={3} SnackbarProps={{}} preventDuplicate autoHideDuration={4000} iconVariant={{
       success: '✅',
